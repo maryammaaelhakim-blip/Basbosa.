@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Happy Birthday Basma ♡</title>
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Fredoka:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600&family=Amiri:ital@0;1&display=swap" rel="stylesheet">
+
+<!-- Icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<!-- JS Canvas Confetti Library -->
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+<style>
+/* =========================================
+   1. GLOBAL STYLES & CUTE PASTEL PALETTE
+========================================= */
+:root {
+    --pastel-yellow: #FFF9C4;
+    --pastel-yellow-dark: #FFE57F;
+    --pastel-purple: #E1BEE7;
+    --pastel-purple-dark: #D1C4E9;
+    --pastel-pink: #F8BBD0;
+    --pastel-mint: #C5E1A5;
+    --white: #FFFFFF;
+    --text-color: #5D4037;
+    --shadow-soft: 0 10px 25px rgba(225, 190, 231, 0.4);
+    --shadow-deep: 0 15px 35px rgba(225, 190, 231, 0.6);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    position: fixed;
+    inset: 0;
+    background-color: var(--pastel-purple);
+    font-family: 'Poppins', sans-serif;
+    color: var(--text-color);
+    user-select: none;
+}
+
+.mouse-sparkle {
+    position: fixed;
+    pointer-events: none;
+    font-size: 14px;
+    z-index: 9999;
+    animation: fadeAndFly 1s linear forwards;
+}
+
+@keyframes fadeAndFly {
+    0% { opacity: 1; transform: translate(0, 0) scale(1); }
+    100% { opacity: 0; transform: translate(var(--tx), var(--ty)) scale(0.3); }
+}
+
+.floating-heart {
+    position: fixed;
+    pointer-events: none;
+    font-size: 20px;
+    z-index: 9999;
+    animation: floatUp 1.2s ease-out forwards;
+}
+
+@keyframes floatUp {
+    0% { opacity: 1; transform: translateY(0) scale(0.8); }
+    50% { opacity: 0.9; transform: translateY(-30px) scale(1.2); }
+    100% { opacity: 0; transform: translateY(-60px) scale(0.6); }
+}
+
+/* =========================================
+   2. MAIN FRAME & LAYOUT FIXES
+========================================= */
+.app-container {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--white);
+    border: 10px solid var(--pastel-purple);
+    overflow: hidden;
+    box-shadow: inset 0 0 40px rgba(225, 190, 231, 0.3);
+    background-image: repeating-linear-gradient(
+        90deg,
+        var(--white) 0px,
+        var(--white) 35px,
+        var(--pastel-yellow) 35px,
+        var(--pastel-yellow) 70px
+    );
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.doodles {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.doodle {
+    position: absolute;
+    font-size: 22px;
+    opacity: 0.75;
+    animation: float 5s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
+    50% { transform: translateY(-12px) rotate(10deg) scale(1.1); }
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-5px) rotate(-0.5deg); }
+    40%, 80% { transform: translateX(5px) rotate(0.5deg); }
+}
+
+.shake {
+    animation: shake 0.35s ease-in-out;
+}
+
+@keyframes popIn {
+    0% { transform: scale(0.92); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+/* =========================================
+   3. SCREEN MANAGEMENT & UI CARDS
+========================================= */
+.screen {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s ease, transform 0.35s ease;
+    transform: scale(0.95);
+    z-index: 10;
+}
+
+.screen.active {
+    opacity: 1;
+    pointer-events: auto;
+    transform: scale(1);
+    animation: popIn 0.35s ease-out;
+}
+
+.card {
+    background: var(--white);
+    border-radius: 28px;
+    padding: 25px 20px 20px 20px;
+    width: min(88vw, 380px);
+    max-height: 78dvh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    text-align: center;
+    box-shadow: 0 12px 30px rgba(209, 196, 233, 0.5);
+    border: 3px solid var(--pastel-purple);
+    position: relative;
+    z-index: 20;
+    margin: auto;
+}
+
+.card::before {
+    content: '🎀';
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 16px;
+    background: var(--pastel-yellow-dark);
+    padding: 1px 12px;
+    border-radius: 12px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+h1 {
+    font-family: 'Fredoka', sans-serif;
+    color: #AB47BC;
+    margin-bottom: 8px;
+    font-size: clamp(1.3rem, 3.8vh, 1.7rem);
+}
+
+h2 {
+    font-family: 'Caveat', cursive;
+    font-size: clamp(1.8rem, 4.5vh, 2.3rem);
+    color: var(--text-color);
+    margin-bottom: 10px;
+    line-height: 1.15;
+    font-weight: 700;
+}
+
+p {
+    font-size: clamp(0.85rem, 2vh, 0.95rem);
+    margin-bottom: 10px;
+    line-height: 1.35;
+}
+
+.btn {
+    font-family: 'Fredoka', sans-serif;
+    background: var(--pastel-purple);
+    color: var(--white);
+    border: none;
+    padding: 10px 22px;
+    font-size: 0.95rem;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 12px rgba(225, 190, 231, 0.6);
+    margin: 4px;
+    flex-shrink: 0;
+}
+
+.btn:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 6px 16px rgba(225, 190, 231, 0.8);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+.btn:disabled {
+    background: #E0E0E0;
+    color: #9E9E9E;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+}
+
+/* =========================================
+   4. LOADING & CAPTCHA SCENERY
+========================================= */
+.loading-bar {
+    height: 10px;
+    width: 100%;
+    background: #F3E5F5;
+    border-radius: 10px;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 12px;
+    border: 2px solid var(--pastel-purple);
+}
+
+.loading-fill {
+    position: absolute;
+    left: 0; top: 0; height: 100%; width: 0%;
+    background: linear-gradient(90deg, var(--pastel-purple-dark), #AB47BC);
+    transition: width 2s cubic-bezier(.4,0,.2,1);
+    border-radius: 8px;
+}
+
+.loading-text {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 13px;
+    color: #8E24AA;
+    min-height: 20px;
+}
+
+.captcha-box {
+    border: 2px dashed #D1C4E9;
+    border-radius: 16px;
+    padding: 8px 10px;
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+    background: #FAF5FB;
+    cursor: pointer;
+    transition: 0.3s;
+    width: 100%;
+}
+
+.captcha-box:hover { 
+    background: #F3E5F5; 
+    border-color: var(--pastel-purple-dark);
+}
+
+.captcha-check {
+    width: 24px; height: 24px;
+    border: 2px solid var(--pastel-purple-dark);
+    border-radius: 6px;
+    margin-right: 10px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--white);
+    transition: 0.3s;
+    flex-shrink: 0;
+}
+
+.captcha-check.checked {
+    background: #8E24AA;
+    border-color: #8E24AA;
+}
+
+.captcha-check.checked i { color: var(--white); font-size: 12px; }
+.captcha-text { text-align: left; flex-grow: 1; font-size: 0.8rem; font-weight: 500; }
+.logo-area { margin-left: 6px; text-align: center; flex-shrink: 0; }
+.logo-text { font-size: 0.55rem; color: #9E9E9E; }
+
+.terminal-prompt {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 12px; border: 2px solid var(--pastel-purple-dark);
+    border-radius: 16px; background: #FAF5FB; margin-top: 8px;
+    width: 100%; transition: 0.3s;
+}
+
+.terminal-prompt:focus-within {
+    border-color: #AB47BC;
+    box-shadow: 0 0 10px rgba(171, 71, 188, 0.2);
+}
+
+#pwd {
+    flex: 1; background: transparent; border: none; outline: none;
+    color: var(--text-color); font-family: 'Poppins', sans-serif; font-size: 13px;
+}
+
+/* =========================================
+   5. CONSENT & WELCOME
+========================================= */
+.consent-buttons {
+    display: flex; gap: 12px; justify-content: center;
+    align-items: center; position: relative; min-height: 45px; margin-top: 8px;
+    width: 100%;
+}
+
+.btn-no {
+    background: var(--white);
+    color: var(--text-color);
+    border: 2px solid var(--pastel-purple);
+    transition: all 0.2s ease-out;
+    z-index: 30;
+}
+
+.polaroid-frame {
+    background: var(--white);
+    padding: 6px 6px 20px 6px;
+    box-shadow: var(--shadow-deep);
+    transform: rotate(-2deg);
+    margin: 4px auto 8px;
+    width: min(150px, 42vw);
+    border-radius: 6px;
+    border: 1px solid #EEE;
+    transition: transform 0.3s ease;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.polaroid-frame::after {
+    content: '🌸';
+    position: absolute;
+    bottom: 3px;
+    right: 6px;
+    font-size: 11px;
+}
+
+.polaroid-frame:hover {
+    transform: rotate(1deg) scale(1.02);
+}
+
+.polaroid-img {
+    width: 100%; height: clamp(90px, 18vh, 120px);
+    background: var(--pastel-purple-dark);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.polaroid-img img {
+    width: 100%; height: 100%; object-fit: cover;
+}
+
+/* =========================================
+   6. HUB GRID & INTERACTIVE STICKERS
+========================================= */
+.hub-grid {
+    display: flex; justify-content: center; gap: 10px;
+    margin-top: 10px; flex-wrap: wrap; width: 100%;
+}
+
+.hub-item {
+    display: flex; flex-direction: column; align-items: center;
+    cursor: pointer; transition: transform 0.3s ease; position: relative;
+    width: 28%; min-width: 65px;
+}
+
+.hub-item:hover { transform: translateY(-3px) scale(1.02); }
+
+.icon-3d {
+    width: clamp(44px, 11vw, 55px); 
+    height: clamp(44px, 11vw, 55px); 
+    border-radius: 14px;
+    display: flex; justify-content: center; align-items: center;
+    font-size: clamp(16px, 4.5vw, 22px); color: var(--white);
+    box-shadow: 0 6px 14px rgba(0,0,0,0.08), inset 0 -3px 6px rgba(0,0,0,0.08), inset 0 3px 6px rgba(255,255,255,0.4);
+    position: relative;
+}
+
+.icon-camera { background: var(--pastel-pink); }
+.icon-notebook { background: #9FA8DA; }
+.icon-gift { background: var(--pastel-yellow-dark); }
+.icon-plant { background: var(--pastel-mint); }
+.icon-envelope { background: var(--pastel-purple-dark); }
+
+.hub-item.visited::after {
+    content: '🌸'; position: absolute; top: -3px; right: -2px;
+    width: 16px; height: 16px; background: #FFF;
+    border-radius: 50%; font-size: 9px;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+}
+
+.hub-item.locked { opacity: 0.5; filter: grayscale(80%); cursor: not-allowed; }
+.hub-item.locked:hover { transform: none; }
+
+.hub-label {
+    margin-top: 4px; font-family: 'Fredoka', sans-serif;
+    font-size: clamp(0.65rem, 1.8vw, 0.75rem); color: var(--text-color);
+    text-align: center;
+}
+
+.progress-tag {
+    position: absolute; top: 10px; right: 10px;
+    font-family: 'Fredoka', sans-serif; font-size: 10px;
+    background: var(--white); padding: 3px 8px; border-radius: 14px;
+    border: 2px solid var(--pastel-purple); color: #8E24AA; z-index: 30;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+/* =========================================
+   7. MODAL OVERLAY & CHAPTERS
+========================================= */
+.modal-overlay {
+    position: fixed; inset: 0; background: rgba(93, 64, 55, 0.4);
+    backdrop-filter: blur(4px); display: flex; justify-content: center;
+    align-items: center; z-index: 100; opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+    padding: 12px;
+}
+
+.modal-overlay.active { opacity: 1; pointer-events: auto; }
+
+.modal-content {
+    background: var(--white); width: min(90vw, 420px); max-height: 80dvh;
+    overflow-y: auto; border-radius: 22px; padding: 18px 14px; position: relative;
+    transform: scale(0.92); transition: transform 0.3s ease;
+    border: 3.5px solid var(--pastel-yellow-dark); color: var(--text-color);
+    scrollbar-width: thin;
+}
+
+.modal-overlay.active .modal-content { transform: scale(1); }
+
+.modal-close {
+    position: absolute; top: 10px; right: 10px; background: var(--pastel-purple);
+    color: var(--white); border: none; width: 26px; height: 26px; border-radius: 50%;
+    font-size: 11px; cursor: pointer; display: flex; justify-content: center; align-items: center;
+    transition: 0.2s; z-index: 10;
+}
+
+.modal-close:hover { background: #8E24AA; transform: rotate(90deg); }
+
+.polaroids-grid { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin: 10px 0; }
+.polaroid-card {
+    width: clamp(90px, 24vw, 110px); background: #FFF; padding: 5px 5px 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08); border-radius: 5px; cursor: pointer;
+    transform: rotate(var(--rot, 0deg)); transition: transform 0.3s;
+}
+.polaroid-card:hover { transform: scale(1.04) rotate(0deg); z-index: 5; }
+
+.polaroid-box { 
+    width: 100%; height: clamp(70px, 16vw, 85px); border-radius: 4px; 
+    overflow: hidden; background: #EEE;
+}
+.polaroid-box img {
+    width: 100%; height: 100%; object-fit: cover;
+}
+
+.journal-entry {
+    background: #FFFDE7; padding: 8px 10px; border-radius: 12px; margin-bottom: 8px;
+    font-family: 'Caveat', cursive; font-size: 1.1rem; border-left: 4px solid var(--pastel-purple);
+    cursor: pointer; transition: transform 0.2s;
+    word-break: break-word; text-align: left;
+}
+.journal-entry:hover { transform: translateX(3px); }
+
+.fact-card {
+    min-height: 90px; display: flex; align-items: center; justify-content: center;
+    font-family: 'Caveat', cursive; font-size: 1.25rem; text-align: center; padding: 8px;
+    line-height: 1.3;
+}
+
+.fact-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; }
+
+.letter-paper {
+    background: #FFF9C4; padding: 12px 10px; border-radius: 14px;
+    font-family: 'Amiri', 'Caveat', serif; font-size: 0.98rem; line-height: 1.6;
+    background-image: repeating-linear-gradient(transparent, transparent 25px, #E1BEE7 26px);
+    position: relative; text-align: right; direction: rtl;
+    max-height: 45dvh; overflow-y: auto;
+}
+
+.lightbox-frame {
+    text-align: center;
+    padding: 4px;
+}
+.lightbox-big-box {
+    width: 100%; height: clamp(150px, 32vh, 190px); border-radius: 10px;
+    overflow: hidden; margin-bottom: 10px; background: #FAF5FB;
+}
+.lightbox-big-box img {
+    width: 100%; height: 100%; object-fit: contain;
+}
+
+.gift-unbox-box {
+    width: 75px; height: 75px; background: var(--pastel-pink);
+    border-radius: 14px; margin: 12px auto; position: relative;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+.gift-unbox-box::before { content: ''; position: absolute; width: 12px; height: 100%; background: var(--pastel-yellow-dark); }
+.gift-unbox-box::after { content: ''; position: absolute; height: 12px; width: 100%; background: var(--pastel-yellow-dark); }
+.gift-bow { position: absolute; top: -8px; font-size: 18px; z-index: 2; }
+
+.cute-toast {
+    position: fixed;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: var(--white);
+    color: var(--text-color);
+    padding: 6px 16px;
+    border-radius: 30px;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 0.78rem;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+    border: 2px solid var(--pastel-purple);
+    z-index: 200;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    white-space: nowrap;
+}
+
+.cute-toast.show {
+    transform: translateX(-50%) translateY(0);
+}
+
+#mission-scene { background: #311B92; color: white; }
+.mission-card { background: transparent; border: none; box-shadow: none; color: white; }
+.mission-card h1 { color: var(--pastel-yellow); font-size: 1.7rem; }
+
+/* =========================================
+   8. SPECIFIC CLOSING SCENE FIXES
+========================================= */
+#closing-scene .card {
+    border-color: #E1BEE7;
+    background: #FFFFFF;
+    box-shadow: 0 10px 30px rgba(225, 190, 231, 0.5);
+    padding: 35px 20px;
+}
+
+#closing-scene h2 {
+    font-family: 'Caveat', cursive;
+    font-size: clamp(2rem, 5vh, 2.5rem);
+    color: #5D4037;
+    line-height: 1.2;
+    margin-bottom: 8px;
+}
+
+#closing-scene p {
+    font-family: 'Poppins', sans-serif;
+    font-size: clamp(0.85rem, 2vh, 1rem);
+    color: #5D4037;
+    opacity: 0.9;
+}
+</style>
+</head>
+<body>
+
+<div class="app-container" id="appFrame">
+    <div class="doodles">
+        <div class="doodle" style="top:8%; left:6%; color:var(--pastel-pink);"><i class="fa-solid fa-heart"></i></div>
+        <div class="doodle" style="top:12%; right:8%; color:var(--pastel-yellow-dark);"><i class="fa-solid fa-star"></i></div>
+        <div class="doodle" style="bottom:10%; left:8%; color:var(--pastel-purple-dark);"><i class="fa-solid fa-cloud"></i></div>
+        <div class="doodle" style="bottom:15%; right:10%; color:var(--pastel-mint);"><i class="fa-solid fa-sparkles"></i></div>
+    </div>
+
+    <!-- 1. LOADING SCREEN -->
+    <section id="loading-scene" class="screen active">
+        <div class="card">
+            <h1>Basma's World 🧁</h1>
+            <div class="loading-bar"><div class="loading-fill"></div></div>
+            <div class="loading-text">Baking something sweet...</div>
+        </div>
+    </section>
+
+    <!-- 2. CAPTCHA SCREEN -->
+    <section id="captcha-scene" class="screen">
+        <div class="card">
+            <h1>Security Check 🐾</h1>
+            <p>Please verify that you are the right person to enter</p>
+            <div class="captcha-box" id="captchaBox">
+                <div class="captcha-check" id="captchaCheck"></div>
+                <div class="captcha-text">I am Basma ♡✨</div>
+                <div class="logo-area">
+                    <i class="fa-solid fa-shield-cat" style="font-size:16px; color:var(--pastel-purple-dark);"></i>
+                    <div class="logo-text">reCAPTCHA</div>
+                </div>
+            </div>
+            <button class="btn" id="btnCaptcha" disabled>CONTINUE →</button>
+        </div>
+    </section>
+
+    <!-- 3. ACCESS PASSWORD SCREEN -->
+    <section id="access-scene" class="screen">
+        <div class="card">
+            <h1>Restricted Access 🗝️</h1>
+            <p>Guess the Password to unlock your special door</p>
+            <div class="terminal-prompt">
+                <i class="fa-solid fa-key" style="color:var(--pastel-purple-dark);"></i>
+                <input type="password" id="pwd" placeholder="Type password here..." autocomplete="off">
+            </div>
+            <div id="status" style="margin-top:8px; font-weight:500; min-height:18px; font-size:0.8rem;"></div>
+        </div>
+    </section>
+
+    <!-- 4. CONSENT SCREEN -->
+    <section id="consent-scene" class="screen">
+        <div class="card">
+            <h2>Your Invitation 💌</h2>
+            <p style="font-size: 0.9rem;">Are you ready to travel into our friendship little world?</p>
+            <div class="consent-buttons">
+                <button class="btn btn-yes">YES! ♡</button>
+                <button class="btn btn-no">NO</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. WELCOME SCREEN -->
+    <section id="welcome-scene" class="screen">
+        <div class="card">
+            <div class="polaroid-frame">
+                <div class="polaroid-img">
+                    <img src="images/1.jpeg" alt="Welcome Photo">
+                </div>
+                <div style="font-family:'Caveat'; font-size:1.1rem; margin-top:2px;">Basbosa ♡</div>
+            </div>
+
+            <h2 style="font-size:clamp(1.4rem, 3.5vh, 1.8rem);">A quiet place has been prepared for someone special</h2>
+            <button class="btn btn-take-seat">Can you give me this honour ✨</button>
+        </div>
+    </section>
+
+    <!-- 6. MAIN HUB -->
+    <section id="scrapbook-scene" class="screen">
+        <div class="progress-tag"><span id="count">0</span> / 4 Discovered</div>
+        <div style="text-align:center; z-index:20; width:100%;">
+            <h1 style="font-size: clamp(1.4rem, 4vh, 1.8rem); margin-bottom:0;">Welcome Twenty ✨</h1>
+            <h2 style="margin-bottom:6px; font-size: clamp(1.2rem, 3.5vh, 1.5rem);">BYE BYE TEEN</h2>
+            
+            <div class="hub-grid">
+                <div class="hub-item" data-obj="camera">
+                    <div class="icon-3d icon-camera"><i class="fa-solid fa-camera"></i></div>
+                    <span class="hub-label">Memories</span>
+                </div>
+                <div class="hub-item" data-obj="journal">
+                    <div class="icon-3d icon-notebook"><i class="fa-solid fa-book-open"></i></div>
+                    <span class="hub-label">Wishing Wall</span>
+                </div>
+                <div class="hub-item" data-obj="gift">
+                    <div class="icon-3d icon-gift"><i class="fa-solid fa-gift"></i></div>
+                    <span class="hub-label">Unboxing</span>
+                </div>
+                <div class="hub-item" data-obj="plant">
+                    <div class="icon-3d icon-plant"><i class="fa-solid fa-seedling"></i></div>
+                    <span class="hub-label">True Things</span>
+                </div>
+                <div class="hub-item locked obj-envelope" data-obj="final-letter">
+                    <div class="icon-3d icon-envelope"><i class="fa-solid fa-envelope-open-text"></i></div>
+                    <span class="hub-label">Final Letter</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7. MISSION COMPLETE -->
+    <section id="mission-scene" class="screen">
+        <div class="card mission-card">
+            <h1>MISSION COMPLETE 🎉</h1>
+            <p style="font-size:0.88rem; color:#E1BEE7;">All memories discovered & All chapters completed</p>
+            <h2 style="color:var(--pastel-yellow); font-size:1.4rem; margin-top:8px;">Happy 20th Birthday, Basbosa</h2>
+            <p style="color:#FFF; font-size:0.85rem;">Some people celebrate birthdays Someone built an entire little world because you exist 💖</p>
+            <button class="btn btn-read-final" style="margin-top:8px; background:var(--pastel-yellow); color:var(--text-color);">READ your LETTER ♡</button>
+        </div>
+    </section>
+
+    <!-- 8. FINAL CLOSING SCREEN (MATCHES IMAGE) -->
+    <section id="closing-scene" class="screen">
+        <div class="card">
+            <h2>Happy 20th,<br>Basma ♡</h2>
+            <p>Hope to be together always</p>
+            <div style="font-size:0.75rem; color:#9E9E9E; margin-top:12px; font-weight: 500;">09 · 04 · 2026</div>
+        </div>
+    </section>
+</div>
+
+<!-- MODAL POPUP -->
+<div class="modal-overlay" id="popupOverlay">
+    <div class="modal-content">
+        <button class="modal-close" onclick="closePopup()"><i class="fa-solid fa-xmark"></i></button>
+        <div id="popupInner"></div>
+    </div>
+</div>
+
+<!-- CUTE TOAST NOTIFICATION -->
+<div class="cute-toast" id="cuteToast">✨ Something cute unlocked!</div>
+
+<script>
+const state = {
+    visited: { camera:false, journal:false, gift:false, plant:false },
+    factIndex: 0
+};
+
+const factsList = [
+    "You have a heart full of kindness and empathy💫",
+    "Your laugh rivals the moon in beauty and as usual it wins decisively 💖",
+    "Your soul shines brighter than any star 🌸",
+    "You inspire others just by being yourself, Trust This 🌸🧸 "
+];
+
+const $ = s => document.querySelector(s);
+const $$ = s => document.querySelectorAll(s);
+const wait = ms => new Promise(r => setTimeout(r, ms));
+
+document.addEventListener('mousemove', (e) => {
+    if (Math.random() > 0.88) {
+        const sparkle = document.createElement('div');
+        sparkle.className = 'mouse-sparkle';
+        sparkle.innerHTML = ['✨', '🌸', '💫', '🧸', '💖'][Math.floor(Math.random() * 5)];
+        sparkle.style.left = e.clientX + 'px';
+        sparkle.style.top = e.clientY + 'px';
+        
+        const tx = (Math.random() - 0.5) * 40;
+        const ty = (Math.random() - 0.5) * 40;
+        sparkle.style.setProperty('--tx', `${tx}px`);
+        sparkle.style.setProperty('--ty', `${ty}px`);
+        
+        document.body.appendChild(sparkle);
+        setTimeout(() => sparkle.remove(), 1000);
+    }
+});
+
+document.addEventListener('click', (e) => {
+    const heart = document.createElement('div');
+    heart.className = 'floating-heart';
+    heart.innerHTML = ['💖', '💕', '✨', '🌸'][Math.floor(Math.random() * 4)];
+    heart.style.left = (e.clientX - 10) + 'px';
+    heart.style.top = (e.clientY - 10) + 'px';
+    document.body.appendChild(heart);
+    setTimeout(() => heart.remove(), 1200);
+});
+
+function showCuteToast(msg) {
+    const toast = $('#cuteToast');
+    toast.textContent = msg;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2500);
+}
+
+function launchConfetti(type = 'soft') {
+    if (typeof confetti !== 'function') return;
+    
+    if (type === 'soft') {
+        confetti({
+            particleCount: 15,
+            spread: 40,
+            origin: { y: 0.7 },
+            colors: ['#E1BEE7', '#FFF9C4', '#F8BBD0', '#C5E1A5'],
+            scalar: 0.8
+        });
+    } else if (type === 'finish') {
+        confetti({
+            particleCount: 35,
+            spread: 70,
+            origin: { y: 0.6 },
+            colors: ['#E1BEE7', '#FFE57F', '#F8BBD0', '#AB47BC']
+        });
+    }
+}
+
+function shakeFrame() {
+    const frame = $('#appFrame');
+    frame.classList.add('shake');
+    setTimeout(() => frame.classList.remove('shake'), 350);
+}
+
+function showScene(id) {
+    $$('.screen').forEach(s => s.classList.remove('active'));
+    const el = document.getElementById(id + '-scene');
+    if (el) el.classList.add('active');
+}
+
+async function runLoading() {
+    const textEl = $('.loading-text');
+    const fillEl = $('.loading-fill');
+    const messages = ['Baking something sweet...', 'Adding extra love... ♡', 'Ready! ✨'];
+    setTimeout(() => fillEl.style.width = '100%', 100);
+    for (let i = 0; i < messages.length; i++) {
+        textEl.textContent = messages[i];
+        await wait(750);
+    }
+    await wait(200);
+    showScene('captcha');
+}
+
+function setupCaptcha() {
+    const box = $('#captchaBox');
+    const check = $('#captchaCheck');
+    const btn = $('#btnCaptcha');
+    
+    box.addEventListener('click', () => {
+        if(!check.classList.contains('checked')) {
+            check.classList.add('checked');
+            check.innerHTML = '<i class="fa-solid fa-check"></i>';
+            btn.disabled = false;
+            showCuteToast("Cute check verified! 🌸");
+        }
+    });
+    
+    btn.addEventListener('click', () => {
+        showScene('access');
+        setTimeout(() => $('#pwd').focus(), 400);
+    });
+}
+
+function setupAccess() {
+    const input = $('#pwd');
+    const status = $('#status');
+
+    input.addEventListener('keydown', async (e) => {
+        if (e.key === 'Enter' && input.value.trim().length > 0) {
+            input.disabled = true;
+            status.style.color = "#8E24AA";
+            status.textContent = 'Unlocking with love... ✨';
+            await wait(900);
+            status.style.color = "#4CAF50";
+            status.textContent = '✓ ACCESS GRANTED ♡';
+            await wait(600);
+            showScene('consent');
+        }
+    });
+}
+
+function setupConsent() {
+    const noBtn = $('.btn-no');
+    const yesBtn = $('.btn-yes');
+    const texts = ['NO 🙈', 'Nope! 😜', 'Catch me! ✨', 'Nice try 🌸', 'Still no 🐰', 'Fine! YES! ♡'];
+    let dodgeCount = 0;
+
+    function dodge(e) {
+        if (e) e.preventDefault();
+        shakeFrame();
+        
+        if (dodgeCount >= 5) {
+            noBtn.textContent = 'Okay, YES! ♡';
+            noBtn.style.opacity = '0.7';
+            noBtn.style.pointerEvents = 'none';
+            return;
+        }
+        
+        const w = window.innerWidth - 80;
+        const h = window.innerHeight - 50;
+        const x = Math.max(10, Math.random() * w);
+        const y = Math.max(10, Math.random() * h);
+        
+        noBtn.style.position = 'fixed';
+        noBtn.style.left = x + 'px';
+        noBtn.style.top = y + 'px';
+        noBtn.textContent = texts[dodgeCount % texts.length];
+        dodgeCount++;
+    }
+
+    noBtn.addEventListener('mouseenter', dodge);
+    noBtn.addEventListener('click', dodge);
+    noBtn.addEventListener('touchstart', dodge, {passive: false});
+
+    yesBtn.addEventListener('click', () => {
+        launchConfetti('soft');
+        showScene('welcome');
+    });
+}
+
+function setupWelcome() {
+    $('.btn-take-seat').addEventListener('click', () => {
+        showScene('scrapbook');
+    });
+}
+
+function initScrapbook() {
+    $$('.hub-item').forEach(item => {
+        item.addEventListener('click', () => {
+            const name = item.dataset.obj;
+            if (item.classList.contains('locked')) {
+                shakeFrame();
+                showCuteToast("Discover other memories first! 🔒");
+                return;
+            }
+            
+            if (name === 'final-letter') {
+                triggerFinalMission();
+            } else {
+                openPopup(name);
+            }
+        });
+    });
+
+    $('.btn-read-final').addEventListener('click', () => {
+        openPopup('final-letter');
+    });
+}
+
+function triggerFinalMission() {
+    showScene('mission');
+    launchConfetti('finish');
+}
+
+function openPopup(name) {
+    const inner = $('#popupInner');
+    inner.innerHTML = getPopupHTML(name);
+    $('#popupOverlay').classList.add('active');
+
+    if (state.visited.hasOwnProperty(name) && !state.visited[name]) {
+        state.visited[name] = true;
+        const item = document.querySelector(`.hub-item[data-obj="${name}"]`);
+        if (item) item.classList.add('visited');
+        updateProgress();
+    }
+}
+
+function openLightbox(imgSrc, title) {
+    const inner = $('#popupInner');
+    inner.innerHTML = `
+        <div class="lightbox-frame">
+            <div class="lightbox-big-box">
+                <img src="${imgSrc}" alt="${title}">
+            </div>
+            <h2 style="font-family:'Caveat'; font-size:1.5rem; margin-top:4px;">${title}</h2>
+            <p style="font-size:0.75rem; opacity:0.8;">A little moment captured forever ♡</p>
+            <button class="btn" onclick="openPopup('camera')" style="margin-top:8px; padding:4px 14px; font-size:0.85rem;">← Back to Gallery</button>
+        </div>
+    `;
+}
+
+function revealWish(el, msg) {
+    if(!el.dataset.opened) {
+        el.dataset.opened = "true";
+        el.style.background = "#FFF";
+        el.style.borderColor = "#E1BEE7";
+        el.style.fontFamily = "'Poppins', sans-serif";
+        el.style.fontSize = "0.8rem";
+        el.textContent = msg;
+        launchConfetti('soft');
+    }
+}
+
+function handleUnbox() {
+    const box = $('#interactiveGift');
+    const msg = $('#giftUnboxMsg');
+    if(!box) return;
+    box.style.transform = 'scale(1.1) rotate(10deg)';
+    setTimeout(() => {
+        box.style.display = 'none';
+        msg.style.display = 'block';
+        launchConfetti('finish');
+    }, 400);
+}
+
+function changeFact(dir) {
+    state.factIndex = (state.factIndex + dir + factsList.length) % factsList.length;
+    const el = $('#factText');
+    if (el) el.textContent = `"${factsList[state.factIndex]}"`;
+}
+
+function closePopup() {
+    $('#popupOverlay').classList.remove('active');
+}
+
+function updateProgress() {
+    const count = Object.values(state.visited).filter(v => v).length;
+    $('#count').textContent = count;
+    
+    if (count === 4) {
+        const env = $('.obj-envelope');
+        if (env && env.classList.contains('locked')) {
+            env.classList.remove('locked');
+            launchConfetti('soft');
+            showCuteToast("Final Letter Unlocked! 💌");
+        }
+    }
+}
+
+function getPopupHTML(name) {
+    switch(name) {
+        case 'camera':
+            return `
+                <h1 style="text-align:center; font-size:1.2rem;">Memories, Lightly Held 📸</h1>
+                <p style="text-align:center; font-size:0.75rem; opacity:0.8;">Tap any Image to enlarge ✨</p>
+                <div class="polaroids-grid">
+                    <div class="polaroid-card" style="--rot:-4deg" onclick="openLightbox('images/3.jpeg', 'Special Day ✨')">
+                        <div class="polaroid-box"><img src="images/3.jpeg" alt="Memory 1"></div>
+                        <p style="text-align:center; font-family:'Caveat'; margin-top:2px;">Special Day</p>
+                    </div>
+                    <div class="polaroid-card" style="--rot:3deg" onclick="openLightbox('images/4.jpg', 'Sweet Laughs 🌸')">
+                        <div class="polaroid-box"><img src="images/4.jpg" alt="Memory 2"></div>
+                        <p style="text-align:center; font-family:'Caveat'; margin-top:2px;">Sweet Laughs</p>
+                    </div>
+                    <div class="polaroid-card" style="--rot:-2deg" onclick="openLightbox('images/photo3.jpg', 'Best Moments 💖')">
+                        <div class="polaroid-box"><img src="images/photo3.jpg" alt="Memory 3"></div>
+                        <p style="text-align:center; font-family:'Caveat'; margin-top:2px;">Best Moments</p>
+                    </div>
+                </div>
+            `;
+        case 'journal':
+            return `
+                <h1 style="text-align:center; font-size:1.2rem;">Wishing Wall 📝</h1>
+                <p style="text-align:center; font-size:0.75rem; opacity:0.8; margin-bottom:8px;">Tap cards to reveal wishes ✨</p>
+                <div class="journal-entry" onclick="revealWish(this, 'May your 20s bring you endless joy and fulfilled dreams ✨')">✨ Wish #1 (Tap to read)</div>
+                <div class="journal-entry" onclick="revealWish(this, 'May you see yourself as much impressive as you really are 🌸')">🌸 Wish #2 (Tap to read)</div>
+                <div class="journal-entry" onclick="revealWish(this, 'Keep the strong independent thing going, and remember you are more than enough 💖')">💖 Wish #3 (Tap to read)</div>
+                <div class="journal-entry" onclick="revealWish(this, 'I love you, Sweetie💖')">💖 Wish #4 (Tap to read)</div>
+            `;
+        case 'gift':
+            return `
+                <h1 style="text-align:center; font-size:1.2rem;">Unboxing Time 🎁</h1>
+                <div class="gift-unbox-box" id="interactiveGift" onclick="handleUnbox()">
+                    <div class="gift-bow">🎀</div>
+                </div>
+                <div id="giftUnboxMsg" style="display:none; text-align:center; margin-top:10px;">
+                    <h2 style="color:#AB47BC; font-size:1.3rem;">Happy 20th Birthday! 🎉</h2>
+                    <p style="font-size:0.85rem;">Welcome to the adult world! ✨</p>
+                </div>
+            `;
+        case 'plant':
+            return `
+                <h1 style="text-align:center; font-size:1.2rem;">True Things 🌱</h1>
+                <div class="fact-card">
+                    <span id="factText">"${factsList[0]}"</span>
+                </div>
+                <div class="fact-nav">
+                    <button class="btn" onclick="changeFact(-1)">← Previous</button>
+                    <button class="btn" onclick="changeFact(1)">Next →</button>
+                </div>
+            `;
+        case 'final-letter':
+            return `
+                <h1 style="text-align:center; margin-bottom:8px; font-size:1.2rem;">A Letter For You 💌</h1>
+                <div class="letter-paper">
+                    عزيزتي بسمة<br><br>
+
+                    حان وقت اللغة العربية، فكما تعلمين، أنا أحب أن أكتب لك بكل لغات العالم، لكن هذه المرة اخترت أن أكتب لك بالعربية لأعبر عن مشاعري بطريقة أكثر دفئًا<br><br> 
+                    تقاطعت طرقنا وكنا أقدَارًا لبعض، فما أحلاه من قدر يسوق أجمل الفتيات قلبًا وقالباً لتصبح صديقتي.
+
+                    كل عام وأنتِ بخير وبأحسن حال، 
+                    كل عام وأنتِ في سعادة وفرحة دائماً يا صاحبة العشرين. قد لا أكتب كثيراً هنا لأن الكلمات لن توفيكِ حقك، ولكن تيقني من أنكِ مميزة وتستحقين كل ما هو جميل في هذا الكون.
+                    
+                    <div style="text-align:left; direction:ltr; margin-top:8px;">Happy Birthday✨</div>
+                </div>
+                <div style="text-align:center; margin-top:10px;">
+                    <button class="btn" onclick="closePopup(); showScene('closing');">Finish ♡</button>
+                </div>
+            `;
+        default:
+            return '';
+    }
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+    runLoading();
+    setupCaptcha();
+    setupAccess();
+    setupConsent();
+    setupWelcome();
+    initScrapbook();
+});
+</script>
+
+</body>
+</html>
